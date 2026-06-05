@@ -91,7 +91,7 @@ if st.session_state.current_module == 'Home':
 
     with col3:
         st.markdown('<div class="tile"><h3>🚚 TraceHub (Log Nexus)</h3><p> (Log Nexus) & Status</p></div>', unsafe_allow_html=True)
-        if st.button("Log NEXUS", use_container_width=True): st.session_state.current_module = 'Transport'; st.rerun()
+        if st.button("Log NEXUS", use_container_width=True): st.session_state.current_module = 'Log NEXUS'; st.rerun()
 
     with col4:
         st.markdown('<div class="tile"><h3>🧾 SmartBill HUB</h3><p>Facturare & Contabilitate</p></div>', unsafe_allow_html=True)
