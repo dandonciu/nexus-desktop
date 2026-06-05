@@ -1,46 +1,24 @@
 """
 Modul 2FA simplu cu PIN fix + blocare dupa 3 incercari
+FARA fisier JSON - PIN-uri direct in cod
 """
 
 import streamlit as st
 import hashlib
-import json
 from datetime import datetime, timedelta
-from pathlib import Path
 
 # ========== CONFIGURARE ==========
-PIN_FILE = Path(__file__).parent / "pins.json"
 LOGIN_ATTEMPTS_KEY = "pin_failed_attempts"
-BLOCK_DURATION_MINUTES = 30
+BLOCK_DURATION_MINUTES = 15
 MAX_ATTEMPTS = 3
 
-# ========== INCARCA PIN-URILE ==========
-def load_pins():
-    if not PIN_FILE.exists():
-        default_pins = {
-            "angajat": hashlib.sha256("222222".encode()).hexdigest(),
-            "manager": hashlib.sha256("222222".encode()).hexdigest(),
-            "admin": hashlib.sha256("333333".encode()).hexdigest()
-        }
-        with open(PIN_FILE, "w") as f:
-            json.dump(default_pins, f, indent=2)
-        return default_pins
-    with open(PIN_FILE, "r") as f:
-        return json.load(f)
-
-def save_pins(pins_dict):
-    with open(PIN_FILE, "w") as f:
-        json.dump(pins_dict, f, indent=2)
-
-def force_update_pins():
-    """Rescrie fisierul pins.json cu valorile din cod"""
-    new_pins = {
-        "angajat": hashlib.sha256("222222".encode()).hexdigest(),
-        "manager": hashlib.sha256("222222".encode()).hexdigest(),
-        "admin": hashlib.sha256("333333".encode()).hexdigest()
-    }
-    save_pins(new_pins)
-    return new_pins
+# ========== PIN-URI DIRECT IN COD ==========
+# Modifica aici PIN-urile pentru fiecare utilizator
+PIN_URI = {
+    "angajat": hashlib.sha256("111111".encode()).hexdigest(),
+    "manager": hashlib.sha256("123456".encode()).hexdigest(),
+    "admin": hashlib.sha256("333333".encode()).hexdigest()
+}
 
 def is_blocked(username):
     if f"blocked_until_{username}" not in st.session_state:
@@ -69,20 +47,17 @@ def unblock_user(username):
     st.session_state[f"{LOGIN_ATTEMPTS_KEY}_{username}"] = 0
 
 def verify_pin(username, pin_input):
-    pins = load_pins()
-    if username not in pins:
+    if username not in PIN_URI:
         return False
     pin_hash = hashlib.sha256(pin_input.encode()).hexdigest()
-    return pin_hash == pins[username]
+    return pin_hash == PIN_URI[username]
 
 def change_pin(username, new_pin):
-    pins = load_pins()
-    if username not in pins:
+    """Schimba PIN-ul in memorie (pierdut la restart)"""
+    if username not in PIN_URI:
         return False
-    pins[username] = hashlib.sha256(new_pin.encode()).hexdigest()
-    save_pins(pins)
+    PIN_URI[username] = hashlib.sha256(new_pin.encode()).hexdigest()
     return True
-
 def verify_2fa(username):
     if st.session_state.get("logged_in", False):
         return True
@@ -92,34 +67,56 @@ def verify_2fa(username):
         minutes_left = int((block_until - datetime.now()).total_seconds() / 60) + 1
         st.error(f"Cont blocat temporar. Incercati din nou peste {minutes_left} minute.")
         return False
-    
-    st.markdown("---")
-    st.subheader("Verificare cod securitate")
-    st.caption("Introdu codul PIN primit pe WhatsApp")
-    
-    pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, key=f"pin_input_{username}")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Verifica", key="verify_pin_btn", use_container_width=True):
-            if not pin_input:
-                st.warning("Introdu codul PIN")
-                st.rerun()
-            if len(pin_input) != 6 or not pin_input.isdigit():
-                st.warning("PIN invalid. Trebuie sa fie exact 6 cifre.")
-                st.rerun()
-            if verify_pin(username, pin_input):
-                st.session_state[f"{LOGIN_ATTEMPTS_KEY}_{username}"] = 0
-                st.success("Cod corect!")
-                return True
-            else:
-                was_blocked = register_failed_attempt(username)
-                remaining = MAX_ATTEMPTS - st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 1)
-                if was_blocked:
-                    st.error(f"Prea multe incercari esuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
+  #===============================================  
+    # Container centrat pentru 2FA
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        st.markdown("---")
+        st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: #666;'>Introdu codul PIN</p>", unsafe_allow_html=True)
+        
+        # FORMULAR pentru a prinde tasta Enter
+        with st.form(key=f"2fa_form_{username}"):
+            pin_input = st.text_input(
+                "Cod PIN (6 cifre)", 
+                type="password", 
+                max_chars=6, 
+                placeholder="PIN",
+                label_visibility="collapsed"
+            )
+            
+            # Butonul Verifică în interiorul formularului
+            submitted = st.form_submit_button("✅ Verifică", use_container_width=True)
+            
+            if submitted:
+                if not pin_input:
+                    st.warning("Introdu codul PIN")
+                    st.rerun()
+                if len(pin_input) != 6 or not pin_input.isdigit():
+                    st.warning("PIN invalid. Trebuie să fie exact 6 cifre.")
+                    st.rerun()
+                if verify_pin(username, pin_input):
+                    st.session_state[f"{LOGIN_ATTEMPTS_KEY}_{username}"] = 0
+                    st.success("Cod corect!")
+                    return True
                 else:
-                    st.error(f"Cod incorect! Mai ai {remaining} incercari.")
-                return False
+                    was_blocked = register_failed_attempt(username)
+                    remaining = MAX_ATTEMPTS - st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 1)
+                    if was_blocked:
+                        st.error(f"Prea multe încercări eșuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
+                    else:
+                        st.error(f"Cod incorect! Mai ai {remaining} încercări.")
+                    return False
+        
+        # Butonul Înapoi (în afara formularului)
+        colb1, colb2, colb3 = st.columns([1, 3, 1])
+        with colb2:
+            if st.button("◀️ Înapoi", key="back_to_login_btn", use_container_width=True):
+                st.session_state.awaiting_2fa = False
+                st.session_state.pending_2fa_user = None
+                st.rerun()
+    
+    return False
     
     with col2:
         if st.button("Inapoi", key="back_to_login_btn", use_container_width=True):
@@ -148,18 +145,3 @@ def admin_2fa_panel():
                     st.rerun()
         else:
             st.success("Niciun utilizator blocat")
-        st.divider()
-        st.write("Schimba cod PIN")
-        pins = load_pins()
-        users = list(pins.keys())
-        selected = st.selectbox("Utilizator", users, key="pin_user")
-        new_pin = st.text_input("PIN nou (6 cifre)", max_chars=6, type="password", key="new_pin")
-        if st.button("Actualizeaza PIN", key="update_pin"):
-            if not new_pin:
-                st.error("Introdu un PIN")
-            elif len(new_pin) != 6 or not new_pin.isdigit():
-                st.error("PIN invalid. Trebuie exact 6 cifre.")
-            else:
-                change_pin(selected, new_pin)
-                st.success(f"PIN actualizat pentru {selected}!")
-                st.rerun()
