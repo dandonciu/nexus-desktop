@@ -150,4 +150,4 @@ elif st.session_state.current_module == 'Etichete':
     render_etichete_module()
 elif st.session_state.current_module == 'Vault':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
-    render_etichete_module()
+    render_Vault_module()
