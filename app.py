@@ -117,7 +117,10 @@ if st.session_state.current_module == 'Home':
 
     with col8:
         st.markdown('<div class="tile"><h3>🛡️ Vault Clienți</h3><p>Setări, Baze Date, Backup</p></div>', unsafe_allow_html=True)
-        st.button("În Construcție 🚧", use_container_width=True, disabled=True, key="vault")
+        if st.button("Acces", use_container_width=True")    
+        if st.session_state.role == "manager": st.session_state.current_module = 'Vault'; st.rerun()
+            else: st.error("⛔ Interzis. Doar Manager.")
+    
 
 elif st.session_state.current_module == 'Lansare':
     st.button("️ Înapoi la Panoul Principal", on_click=go_home)
@@ -143,5 +146,8 @@ elif st.session_state.current_module == 'SmartBill':
     c1.button("Ramura A: Facturare & Gestiune", use_container_width=True)
     c2.button("Ramura B: Contabilitate & Încasări", use_container_width=True)
 elif st.session_state.current_module == 'Etichete':
+    st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
+    render_etichete_module()
+elif st.session_state.current_module == 'Vault':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
     render_etichete_module()
