@@ -118,8 +118,8 @@ if st.session_state.current_module == 'Home':
     with col8:
         st.markdown('<div class="tile"><h3>🛡️ Vault Clienți</h3><p>Setări, Baze Date, Backup</p></div>', unsafe_allow_html=True)
         if st.button("Acces", use_container_width=True")    
-        if st.session_state.role == "manager": st.session_state.current_module = 'Vault'; st.rerun()
-            else: st.error("⛔ Interzis. Doar Manager.")
+        ile = 'Vault'; st.rerun()f st.session_state.role == "manager": st.session_state.current_modu
+
     
 
 elif st.session_state.current_module == 'Lansare':
