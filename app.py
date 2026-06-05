@@ -40,7 +40,7 @@ if not st.session_state.logged_in:
             st.stop()
     
     # Altfel, afișează formularul de parolă
-    col1, col2, col3 = st.columns([1, 3, 1])
+    col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         with st.form("login_form"):
             pwd = st.text_input("Parolă Acces (angajat / manager / admin)", type="password")
