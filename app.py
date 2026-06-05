@@ -91,7 +91,7 @@ if st.session_state.current_module == 'Home':
 
     with col3:
         st.markdown('<div class="tile"><h3>🚚 TraceHub (Log Nexus)</h3><p> (Log Nexus) & Status</p></div>', unsafe_allow_html=True)
-        if st.button("Deschide Transport", use_container_width=True): st.session_state.current_module = 'Transport'; st.rerun()
+        if st.button("Log NEXUS", use_container_width=True): st.session_state.current_module = 'Transport'; st.rerun()
 
     with col4:
         st.markdown('<div class="tile"><h3>🧾 SmartBill HUB</h3><p>Facturare & Contabilitate</p></div>', unsafe_allow_html=True)
@@ -132,10 +132,10 @@ elif st.session_state.current_module == 'Receptie':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
     st.title("📥 Modul Recepție Marfă")
     st.info("📥 Modul Recepție Marfă -> În Dezvoltare")
-elif st.session_state.current_module == 'Transport':
+elif st.session_state.current_module == 'Log NEXUS':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
-    st.title("🚚 Modul Transport & Curieri")
-    st.info("🚚 Modul Transport -> În Dezvoltare")
+    st.title("🚚 Modul Log NEXUS")
+    st.info("🚚 Modul Log NEXUS -> În Dezvoltare")
 elif st.session_state.current_module == 'SmartBill':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
     st.title("🧾 SmartBill HUB")
