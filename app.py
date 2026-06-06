@@ -95,52 +95,67 @@ with c_out:
     if st.button("🚪 Logout"): st.session_state.logged_in = False; st.rerun()
 st.divider()
 
+# =================================================
 if st.session_state.current_module == 'Home':
-    st.markdown("#### ⚡ Flux Operațional")
+    st.markdown("#### ⚡ Module Operaționale")
+    
+    # Linia 1
     col1, col2, col3, col4 = st.columns(4)
-
     with col1:
         st.markdown('<div class="tile"><h3>📦 Lansare Comenzi</h3><p>Ieșiri, WMS, Avize PDF</p></div>', unsafe_allow_html=True)
-        if st.button("Deschide Lansare", use_container_width=True, type="primary"): st.session_state.current_module = 'Lansare'; st.rerun()
-
+        if st.button("Deschide Lansare", use_container_width=True, key="btn_lansare"):
+            st.session_state.current_module = 'Lansare'
+            st.rerun()
+    
     with col2:
         st.markdown('<div class="tile"><h3>📥 Recepție & NIR</h3><p>Intrări marfă în Gestiune</p></div>', unsafe_allow_html=True)
-        if st.button("Deschide Recepție", use_container_width=True): st.session_state.current_module = 'Receptie'; st.rerun()
-
+        if st.button("Deschide Recepție", use_container_width=True, key="btn_receptie"):
+            st.session_state.current_module = 'Receptie'
+            st.rerun()
+    
     with col3:
-        st.markdown('<div class="tile"><h3>🚚 TraceHub (Log Nexus)</h3><p> (Log Nexus) & Status</p></div>', unsafe_allow_html=True)
-        if st.button("Log NEXUS", use_container_width=True): st.session_state.current_module = 'Log NEXUS'; st.rerun()
-
+        st.markdown('<div class="tile"><h3>📊 Manager Analytics</h3><p>KPIs & Istoric Livrări</p></div>', unsafe_allow_html=True)
+        if st.button("Deschide Dashboard", use_container_width=True, key="btn_analytics"):
+            if st.session_state.role == "manager":
+                st.session_state.current_module = 'Manager'
+                st.rerun()
+            else:
+                st.error("⛔ Acces restricționat. Doar Manager.")
+    
     with col4:
         st.markdown('<div class="tile"><h3>🧾 SmartBill HUB</h3><p>Facturare & Contabilitate</p></div>', unsafe_allow_html=True)
-        if st.button("Deschide SmartBill", use_container_width=True): st.session_state.current_module = 'SmartBill'; st.rerun()
-
-    st.markdown("<br>#### 🛠️ Instrumente, AI & Analiză", unsafe_allow_html=True)
-
+        if st.button("Deschide SmartBill", use_container_width=True, key="btn_smartbill"):
+            st.session_state.current_module = 'SmartBill'
+            st.rerun()
+    
+    # Linia 2
     col5, col6, col7, col8 = st.columns(4)
-
     with col5:
-        st.markdown('<div class="tile"><h3>📨 Inbox Auto-Procesare</h3><p>Email B2B & Auto-Reply</p></div>', unsafe_allow_html=True)
-        if st.button("Verifică Inbox", use_container_width=True): st.session_state.current_module = 'Email'; st.rerun()
-
+        st.markdown('<div class="tile"><h3>📨 Inbox Auto</h3><p>Email B2B & Auto-Reply</p></div>', unsafe_allow_html=True)
+        if st.button("Verifică Inbox", use_container_width=True, key="btn_inbox"):
+            st.session_state.current_module = 'Email'
+            st.rerun()
+    
     with col6:
-        st.markdown('<div class="tile"><h3> Studio Etichete AI</h3><p>Editare PDF/JPG cu AI</p></div>', unsafe_allow_html=True)
-        if st.button("Deschide Studio", use_container_width=True): st.session_state.current_module = 'Etichete'; st.rerun()
-
+        st.markdown('<div class="tile"><h3>🎨 Studio Etichete</h3><p>Editare PDF/JPG cu AI</p></div>', unsafe_allow_html=True)
+        if st.button("Deschide Studio", use_container_width=True, key="btn_etichete"):
+            st.session_state.current_module = 'Etichete'
+            st.rerun()
+    
     with col7:
-        st.markdown('<div class="tile"><h3>📊 Manager Analytics</h3><p>KPIs & Istoric Livrări</p></div>', unsafe_allow_html=True)
-        if st.button("Deschide Dashboard", use_container_width=True):
-            if st.session_state.role == "manager": st.session_state.current_module = 'Manager'; st.rerun()
-            else: st.error("⛔ Interzis. Doar Manager.")
-
+        st.markdown('<div class="tile"><h3>🚚 TraceHub</h3><p>Log Nexus & Tracking</p></div>', unsafe_allow_html=True)
+        if st.button("Deschide TraceHub", use_container_width=True, key="btn_tracehub"):
+            st.session_state.current_module = 'Transport'
+            st.rerun()
+    
     with col8:
         st.markdown('<div class="tile"><h3>🛡️ Vault</h3><p>Setări, Baze Date, Backup</p></div>', unsafe_allow_html=True)
-        if st.button("Acces", use_container_width=True):
-            if st.session_state.role == "manager": 
+        if st.button("Acces Vault", use_container_width=True, key="btn_vault"):
+            if st.session_state.role == "manager":
                 st.session_state.current_module = 'vault'
                 st.rerun()
-            else: 
-                st.error("⛔ Doar Manager")
+            else:
+                st.error("⛔ Acces restricționat. Doar Manager.")
 
     
 
