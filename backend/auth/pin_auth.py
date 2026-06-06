@@ -82,14 +82,11 @@ def verify_2fa(username):
         st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center;'>Utilizator: <b>{username}</b></p>", unsafe_allow_html=True)
         
-        # ===== MESAJ ÎNCERCĂRI RĂMASE - VIZIBIL IMEDIAT =====
+        # ===== MESAJ ÎNCERCĂRI EȘUATE =====
         attempts_used = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
-        remaining = MAX_ATTEMPTS - attempts_used
-        if remaining > 0 and remaining < MAX_ATTEMPTS:
-            st.warning(f"⚠️ Atenție! Ai deja {attempts_used} încercări eșuate. Mai ai {remaining} încercări înainte de blocare.")
-        elif remaining == 0:
-            st.error(f"❌ Contul este blocat temporar. Încearcă mai târziu.")
-        # ===================================================
+        if attempts_used > 0:
+            st.warning(f"⚠️ Atenție! Ai deja {attempts_used} încercări eșuate. Mai ai {MAX_ATTEMPTS - attempts_used} încercări înainte de blocare.")
+        # ===================================
         
         # Câmp PIN
         pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="Introdu PIN", key=f"pin_input_{username}")
@@ -108,11 +105,12 @@ def verify_2fa(username):
                     return True
                 else:
                     was_blocked = register_failed_attempt(username)
-                    remaining_after = MAX_ATTEMPTS - st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
+                    # Re-obține valoarea actualizată
+                    new_attempts = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
                     if was_blocked:
                         st.error(f"❌ Prea multe încercări eșuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
                     else:
-                        st.error(f"❌ Cod incorect! Mai ai {remaining_after} încercări.")
+                        st.error(f"❌ Cod incorect! Mai ai {MAX_ATTEMPTS - new_attempts} încercări.")
         
         with col_btn2:
             if st.button("◀️ Înapoi", use_container_width=True, key="back_btn"):
