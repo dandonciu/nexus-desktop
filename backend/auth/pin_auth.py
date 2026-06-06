@@ -63,26 +63,32 @@ def verify_2fa(username):
     if st.session_state.get("logged_in", False):
         return True
     
-    if is_blocked(username):
-        block_until = st.session_state[f"blocked_until_{username}"]
-        minutes_left = int((block_until - datetime.now()).total_seconds() / 60) + 1
-        st.error(f"❌ Cont blocat temporar. Încearcă din nou peste {minutes_left} minute.")
-        c1, c2, c3 = st.columns([1, 2, 1])
-        with c2:
-            if st.button("◀️ Înapoi la autentificare", key="back_blocked", use_container_width=True):
-                st.session_state.awaiting_2fa = False
-                st.session_state.pending_2fa_user = None
-                st.rerun()
-        return False
+    # Verifică blocarea
+    block_key = f"blocked_until_{username}"
+    if block_key in st.session_state:
+        block_until = st.session_state[block_key]
+        if datetime.now() < block_until:
+            minutes_left = int((block_until - datetime.now()).total_seconds() / 60) + 1
+            st.error(f"❌ Cont blocat temporar. Încearcă din nou peste {minutes_left} minute.")
+            c1, c2, c3 = st.columns([1, 2, 1])
+            with c2:
+                if st.button("◀️ Înapoi la autentificare", key="back_blocked", use_container_width=True):
+                    st.session_state.awaiting_2fa = False
+                    st.session_state.pending_2fa_user = None
+                    st.rerun()
+            return False
+        else:
+            # Blocarea a expirat - curățare
+            del st.session_state[block_key]
+            st.session_state[f"{LOGIN_ATTEMPTS_KEY}_{username}"] = 0
     
     # Container centrat pentru 2FA
-    col1, col2, col3 = st.columns([3, 3, 3])
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("---")
         st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center;'>Utilizator: <b>{username}</b></p>", unsafe_allow_html=True)
         
-        # Formular pentru a prinde Enter
         with st.form(key=f"2fa_form_{username}"):
             pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="Introdu PIN și apasă Enter", label_visibility="collapsed")
             
