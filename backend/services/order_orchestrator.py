@@ -245,7 +245,7 @@ def render_lansare_module():
                     payload_log.insert(0, {"Cod Gestiune": item['Cod_Depozit_Pal'], "Denumire": f"{nf} (Sigilat)", "Cant": str(pal), "UM": "PAL"})
 
             cp1, cp2 = st.columns(2)
-            with cp1: st.warning("🚚 Spre Stivuitorist"); st.dataframe(pd.DataFrame(payload_log)[['Cod Gestiune', 'Denumire', 'Cant', 'UM']], hide_index=True)
+            with cp1: st.warning("🚚 Spre Depozit"); st.dataframe(pd.DataFrame(payload_log)[['Cod Gestiune', 'Denumire', 'Cant', 'UM']], hide_index=True)
             with cp2: st.success("🧾 Spre SmartBill"); st.dataframe(pd.DataFrame(payload_fisc)[['Cod_Depozit', 'Nomenclator Oficial', 'Cantitate (U.M.)']], hide_index=True)
             
             st.divider()
