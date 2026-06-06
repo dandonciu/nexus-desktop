@@ -76,34 +76,28 @@ def verify_2fa(username):
         return False
     
     # Container centrat pentru 2FA
-    col1, col2, col3 = st.columns([3, 3, 3])
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("---")
         st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center;'>Utilizator: <b>{username}</b></p>", unsafe_allow_html=True)
         
-        # Câmp PIN (fără formular, ca să prindă Enter)
-        pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="Introdu PIN și apasă Enter", key=f"pin_input_{username}")
-        
-        # Verificare automată la Enter
-        if pin_input and len(pin_input) == 6 and pin_input.isdigit():
-            if verify_pin(username, pin_input):
-                st.session_state[f"{LOGIN_ATTEMPTS_KEY}_{username}"] = 0
-                st.success("✅ Cod corect!")
-                return True
-            else:
-                was_blocked = register_failed_attempt(username)
-                new_attempts = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
-                if was_blocked:
-                    st.error(f"❌ Prea multe încercări eșuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
-                else:
-                    st.error(f"❌ Cod incorect! Mai ai {MAX_ATTEMPTS - new_attempts} încercări.")
-                st.rerun()
-        
-        col_btn1, col_btn2 = st.columns(2)
-        
-        with col_btn1:
-            if st.button("✅ Verifică", use_container_width=True, key="verify_btn"):
+        # Formular pentru a prinde Enter
+        with st.form(key=f"2fa_form_{username}"):
+            pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="Introdu PIN și apasă Enter", label_visibility="collapsed")
+            
+            col_btn1, col_btn2 = st.columns(2)
+            
+            with col_btn1:
+                submitted = st.form_submit_button("✅ Verifică", use_container_width=True)
+            
+            with col_btn2:
+                if st.form_submit_button("◀️ Înapoi", use_container_width=True):
+                    st.session_state.awaiting_2fa = False
+                    st.session_state.pending_2fa_user = None
+                    st.rerun()
+            
+            if submitted:
                 if not pin_input:
                     st.error("❌ Introdu codul PIN")
                 elif len(pin_input) != 6 or not pin_input.isdigit():
@@ -119,15 +113,8 @@ def verify_2fa(username):
                         st.error(f"❌ Prea multe încercări eșuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
                     else:
                         st.error(f"❌ Cod incorect! Mai ai {MAX_ATTEMPTS - new_attempts} încercări.")
-                    st.rerun()
         
-        with col_btn2:
-            if st.button("◀️ Înapoi", use_container_width=True, key="back_btn"):
-                st.session_state.awaiting_2fa = False
-                st.session_state.pending_2fa_user = None
-                st.rerun()
-        
-        # ===== MESAJ ÎNCERCĂRI EȘUATE =====
+        # Mesaj încercări eșuate
         attempts_used = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
         if attempts_used > 0:
             st.markdown(f"""
@@ -136,6 +123,5 @@ def verify_2fa(username):
                 Mai ai <b>{MAX_ATTEMPTS - attempts_used}</b> încercări înainte de blocare.
             </div>
             """, unsafe_allow_html=True)
-        # =================================================
     
     return False
