@@ -145,7 +145,7 @@ if st.session_state.current_module == 'Home':
     with col7:
         st.markdown('<div class="tile"><h3>🚚 TraceHub</h3><p>Log Nexus & Tracking</p></div>', unsafe_allow_html=True)
         if st.button("Deschide TraceHub", use_container_width=True, key="btn_tracehub"):
-            st.session_state.current_module = 'Transport'
+            st.session_state.current_module = 'TraceHub'
             st.rerun()
     
     with col8:
@@ -185,6 +185,10 @@ elif st.session_state.current_module == 'SmartBill':
 elif st.session_state.current_module == 'Etichete':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
     render_etichete_module()
+elif st.session_state.current_module == 'TraceHub':
+    st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
+    st.title("🚚 Modul Trace Hub & Log Nexus")
+    st.info("🚚 Modul Trace Hub - -> În Dezvoltare")
 elif st.session_state.current_module == 'vault':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
     render_vault_module()
