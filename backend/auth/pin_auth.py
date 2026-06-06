@@ -56,7 +56,7 @@ def change_pin(username, new_pin):
         return False
     PIN_URI[username] = hashlib.sha256(new_pin.encode()).hexdigest()
     return True
-
+#=========================================
 def verify_2fa(username):
     if st.session_state.get("logged_in", False):
         return True
@@ -86,6 +86,7 @@ def verify_2fa(username):
         if 0 < remaining < MAX_ATTEMPTS:
             st.warning(f"⚠️ Mai ai {remaining} încercări rămase.")
         
+        # FORMULAR pentru PIN
         with st.form(key=f"2fa_form_{username}"):
             pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="PIN", label_visibility="collapsed")
             submitted = st.form_submit_button("✅ Verifică", use_container_width=True)
@@ -110,11 +111,13 @@ def verify_2fa(username):
                         st.error(f"❌ Cod incorect! Mai ai {remaining_after} încercări.")
                     return False
         
-        # BUTON ÎNAPOI - mereu vizibil după formular
+        # BUTON ÎNAPOI - mereu vizibil, în afara formularului
         st.markdown("---")
-        if st.button("◀️ Înapoi la autentificare", use_container_width=True):
-            st.session_state.awaiting_2fa = False
-            st.session_state.pending_2fa_user = None
-            st.rerun()
+        col_back1, col_back2, col_back3 = st.columns([1, 2, 1])
+        with col_back2:
+            if st.button("◀️ Înapoi la autentificare", key="back_btn_2fa", use_container_width=True):
+                st.session_state.awaiting_2fa = False
+                st.session_state.pending_2fa_user = None
+                st.rerun()
     
     return False
