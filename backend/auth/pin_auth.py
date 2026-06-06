@@ -59,6 +59,7 @@ def change_pin(username, new_pin):
     PIN_URI[username] = hashlib.sha256(new_pin.encode()).hexdigest()
     return True
 # ====================================================
+
 def verify_2fa(username):
     if st.session_state.get("logged_in", False):
         return True
@@ -81,12 +82,6 @@ def verify_2fa(username):
         st.markdown("---")
         st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center;'>Utilizator: <b>{username}</b></p>", unsafe_allow_html=True)
-        
-        # ===== MESAJ ÎNCERCĂRI EȘUATE =====
-        attempts_used = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
-        if attempts_used > 0:
-            st.warning(f"⚠️ Atenție! Ai deja {attempts_used} încercări eșuate. Mai ai {MAX_ATTEMPTS - attempts_used} încercări înainte de blocare.")
-        # ===================================
         
         # Câmp PIN
         pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="Introdu PIN", key=f"pin_input_{username}")
@@ -111,11 +106,18 @@ def verify_2fa(username):
                         st.error(f"❌ Prea multe încercări eșuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
                     else:
                         st.error(f"❌ Cod incorect! Mai ai {MAX_ATTEMPTS - new_attempts} încercări.")
+                    st.rerun()  # ← FORȚEAZĂ REÎNCĂRCAREA PENTRU A ACTUALIZA MESAJUL
         
         with col_btn2:
             if st.button("◀️ Înapoi", use_container_width=True, key="back_btn"):
                 st.session_state.awaiting_2fa = False
                 st.session_state.pending_2fa_user = None
                 st.rerun()
+        
+        # ===== MESAJ ÎNCERCĂRI EȘUATE - DUPĂ BUTOANE =====
+        attempts_used = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
+        if attempts_used > 0:
+            st.warning(f"⚠️ Atenție! Ai deja {attempts_used} încercări eșuate. Mai ai {MAX_ATTEMPTS - attempts_used} încercări înainte de blocare.")
+        # =================================================
     
     return False
