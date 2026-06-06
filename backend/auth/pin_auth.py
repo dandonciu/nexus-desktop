@@ -59,7 +59,6 @@ def change_pin(username, new_pin):
     PIN_URI[username] = hashlib.sha256(new_pin.encode()).hexdigest()
     return True
 # ====================================================
-
 def verify_2fa(username):
     if st.session_state.get("logged_in", False):
         return True
@@ -77,14 +76,29 @@ def verify_2fa(username):
         return False
     
     # Container centrat pentru 2FA
-    col1, col2, col3 = st.columns([3, 3, 3])
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("---")
         st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center;'>Utilizator: <b>{username}</b></p>", unsafe_allow_html=True)
         
-        # Câmp PIN
-        pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="Introdu PIN", key=f"pin_input_{username}")
+        # Câmp PIN (fără formular, ca să prindă Enter)
+        pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="Introdu PIN și apasă Enter", key=f"pin_input_{username}")
+        
+        # Verificare automată la Enter
+        if pin_input and len(pin_input) == 6 and pin_input.isdigit():
+            if verify_pin(username, pin_input):
+                st.session_state[f"{LOGIN_ATTEMPTS_KEY}_{username}"] = 0
+                st.success("✅ Cod corect!")
+                return True
+            else:
+                was_blocked = register_failed_attempt(username)
+                new_attempts = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
+                if was_blocked:
+                    st.error(f"❌ Prea multe încercări eșuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
+                else:
+                    st.error(f"❌ Cod incorect! Mai ai {MAX_ATTEMPTS - new_attempts} încercări.")
+                st.rerun()
         
         col_btn1, col_btn2 = st.columns(2)
         
@@ -100,13 +114,12 @@ def verify_2fa(username):
                     return True
                 else:
                     was_blocked = register_failed_attempt(username)
-                    # Re-obține valoarea actualizată
                     new_attempts = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
                     if was_blocked:
                         st.error(f"❌ Prea multe încercări eșuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
                     else:
                         st.error(f"❌ Cod incorect! Mai ai {MAX_ATTEMPTS - new_attempts} încercări.")
-                    st.rerun()  # ← FORȚEAZĂ REÎNCĂRCAREA PENTRU A ACTUALIZA MESAJUL
+                    st.rerun()
         
         with col_btn2:
             if st.button("◀️ Înapoi", use_container_width=True, key="back_btn"):
