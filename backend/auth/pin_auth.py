@@ -58,7 +58,7 @@ def change_pin(username, new_pin):
         return False
     PIN_URI[username] = hashlib.sha256(new_pin.encode()).hexdigest()
     return True
-===================================================
+# ===================================================
 def verify_2fa(username):
     if st.session_state.get("logged_in", False):
         return True
