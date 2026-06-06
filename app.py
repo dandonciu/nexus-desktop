@@ -44,19 +44,36 @@ if not st.session_state.logged_in:
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         with st.form("login_form"):
-            pwd = st.text_input("Parolă Acces (angajat / manager / admin)", type="password")
+            pwd = st.text_input("Parolă Acces", type="password")
             submitted = st.form_submit_button("Autentificare", use_container_width=True)
             
             if submitted:
-                if pwd in ["angajat", "manager", "admin"]:
+                # Normalizare parolă (acceptă "angajat", "angajat-no", "angajatxxx")
+                if "angajat" in pwd:
+                    role = "angajat"
                     st.session_state.awaiting_2fa = True
-                    st.session_state.pending_2fa_user = pwd
-                    st.session_state.pending_2fa_role = pwd
+                    st.session_state.pending_2fa_user = role
+                    st.session_state.pending_2fa_role = role
+                    st.rerun()
+                elif "manager" in pwd:
+                    role = "manager"
+                    st.session_state.awaiting_2fa = True
+                    st.session_state.pending_2fa_user = role
+                    st.session_state.pending_2fa_role = role
+                    st.rerun()
+                elif "admin" in pwd:
+                    role = "admin"
+                    st.session_state.awaiting_2fa = True
+                    st.session_state.pending_2fa_user = role
+                    st.session_state.pending_2fa_role = role
                     st.rerun()
                 else:
-                    st.error("Acces Respins!")
+                    st.error("❌ Acces respins!")
     
     st.stop()
+
+# ========== DASHBOARD ==========
+
 
 # ========== RESTUL APLICAȚIEI (doar dacă e logat) ==========
 # Aici vine dashboard-ul tău, modulele, etc.
