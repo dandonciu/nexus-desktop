@@ -77,13 +77,7 @@ def verify_2fa(username):
     st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
     st.markdown(f"<p style='text-align: center;'>Utilizator: <b>{username}</b></p>", unsafe_allow_html=True)
     
-    # Încercări rămase
-    attempts_used = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
-    remaining = MAX_ATTEMPTS - attempts_used
-    if remaining > 0 and remaining < MAX_ATTEMPTS:
-        st.warning(f"⚠️ Mai ai {remaining} încercări rămase.")
-    
-    # Verificare PIN
+    # Câmp PIN
     pin_input = st.text_input("Cod PIN (6 cifre)", type="password", max_chars=6, placeholder="Introdu PIN", key=f"pin_input_{username}")
     
     col1, col2 = st.columns(2)
@@ -100,11 +94,11 @@ def verify_2fa(username):
                 return True
             else:
                 was_blocked = register_failed_attempt(username)
-                new_remaining = MAX_ATTEMPTS - st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
+                remaining_after = MAX_ATTEMPTS - st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
                 if was_blocked:
                     st.error(f"❌ Prea multe încercări eșuate! Cont blocat {BLOCK_DURATION_MINUTES} minute.")
                 else:
-                    st.error(f"❌ Cod incorect! Mai ai {new_remaining} încercări.")
+                    st.error(f"❌ Cod incorect! Mai ai {remaining_after} încercări.")
     
     with col2:
         if st.button("◀️ Înapoi", use_container_width=True, key="back_btn"):
