@@ -113,7 +113,7 @@ def verify_2fa(username):
         
         # BUTON ÎNAPOI - mereu vizibil, în afara formularului
         st.markdown("---")
-        col_back1, col_back2, col_back3 = st.columns([3, 3, 3])
+        col_back1, col_back2, col_back3 = st.columns([2, 3, 2])
         with col_back2:
             if st.button("◀️ Înapoi la autentificare", key="back_btn_2fa", use_container_width=True):
                 st.session_state.awaiting_2fa = False
