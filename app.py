@@ -170,6 +170,6 @@ elif st.session_state.current_module == 'SmartBill':
 elif st.session_state.current_module == 'Etichete':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
     render_etichete_module()
-elif st.session_state.current_module == 'Vault':
+elif st.session_state.current_module == 'vault':
     st.button("⬅️ Înapoi la Panoul Principal", on_click=go_home)
     render_vault_module()
