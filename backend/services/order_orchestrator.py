@@ -345,7 +345,7 @@ def render_lansare_module():
                     
             # PASUL 3: Validare si SEND
             elif cmd['Status'] == "Draft Acte":
-                st.markdown("##### 📄 Documente Pregătite (Verificare Ochiometrică):")
+                st.markdown("##### 📄 Documente Pregătite (Verificare Vizuală):")
                 c_d1, c_d2 = st.columns(2)
                 with c_d1:
                     with open(cmd['pdf_aviz'], "rb") as file: 
