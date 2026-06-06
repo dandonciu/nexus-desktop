@@ -114,10 +114,15 @@ def verify_2fa(username):
                 st.session_state.pending_2fa_user = None
                 st.rerun()
         
-        # ===== MESAJ ÎNCERCĂRI EȘUATE - DUPĂ BUTOANE =====
+        # ===== MESAJ ÎNCERCĂRI EȘUATE =====
         attempts_used = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
         if attempts_used > 0:
-            st.warning(f"⚠️ Atenție! Ai deja {attempts_used} încercări eșuate. Mai ai {MAX_ATTEMPTS - attempts_used} încercări înainte de blocare.")
+            st.markdown(f"""
+            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; border-radius: 5px;">
+                ⚠️ <b>Atenție!</b> Ai deja <b>{attempts_used}</b> încercări eșuate.<br>
+                Mai ai <b>{MAX_ATTEMPTS - attempts_used}</b> încercări înainte de blocare.
+            </div>
+            """, unsafe_allow_html=True)
         # =================================================
     
     return False
