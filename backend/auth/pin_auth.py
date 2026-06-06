@@ -13,7 +13,6 @@ BLOCK_DURATION_MINUTES = 15
 MAX_ATTEMPTS = 3
 
 # ========== PIN-URI DIRECT IN COD ==========
-# Modifica aici PIN-urile pentru fiecare utilizator
 PIN_URI = {
     "angajat": hashlib.sha256("111111".encode()).hexdigest(),
     "manager": hashlib.sha256("123456".encode()).hexdigest(),
@@ -53,12 +52,11 @@ def verify_pin(username, pin_input):
     return pin_hash == PIN_URI[username]
 
 def change_pin(username, new_pin):
-    """Schimba PIN-ul in memorie (pierdut la restart)"""
     if username not in PIN_URI:
         return False
     PIN_URI[username] = hashlib.sha256(new_pin.encode()).hexdigest()
     return True
-# ===================================================
+
 def verify_2fa(username):
     if st.session_state.get("logged_in", False):
         return True
@@ -67,14 +65,16 @@ def verify_2fa(username):
         block_until = st.session_state[f"blocked_until_{username}"]
         minutes_left = int((block_until - datetime.now()).total_seconds() / 60) + 1
         st.error(f"❌ Cont blocat temporar. Incercati din nou peste {minutes_left} minute.")
-        if st.button("◀️ Înapoi la autentificare"):
-            st.session_state.awaiting_2fa = False
-            st.session_state.pending_2fa_user = None
-            st.rerun()
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("◀️ Înapoi la autentificare", use_container_width=True):
+                st.session_state.awaiting_2fa = False
+                st.session_state.pending_2fa_user = None
+                st.rerun()
         return False
     
     # Container centrat pentru 2FA
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("---")
         st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
@@ -99,7 +99,7 @@ def verify_2fa(username):
                     st.rerun()
                 if verify_pin(username, pin_input):
                     st.session_state[f"{LOGIN_ATTEMPTS_KEY}_{username}"] = 0
-                    st.success("✅ Cod corect!")
+                    st.success("✅ Cod corect! Redirecționare...")
                     return True
                 else:
                     was_blocked = register_failed_attempt(username)
@@ -110,7 +110,7 @@ def verify_2fa(username):
                         st.error(f"❌ Cod incorect! Mai ai {remaining_after} încercări.")
                     return False
         
-        # BUTON ÎNAPOI - mereu vizibil, în afara formularului
+        # BUTON ÎNAPOI - după formular
         st.markdown("---")
         if st.button("◀️ Înapoi la autentificare", use_container_width=True):
             st.session_state.awaiting_2fa = False
@@ -118,23 +118,3 @@ def verify_2fa(username):
             st.rerun()
     
     return False
-=========================================
-def admin_2fa_panel():
-    if st.session_state.get("role") not in ["admin", "manager"]:
-        return
-    with st.sidebar.expander("Admin 2FA", expanded=False):
-        blocked_users = []
-        for key in st.session_state.keys():
-            if key.startswith("blocked_until_"):
-                username = key.replace("blocked_until_", "")
-                if is_blocked(username):
-                    blocked_users.append(username)
-        if blocked_users:
-            st.warning(f"Blocati: {', '.join(blocked_users)}")
-            for user in blocked_users:
-                if st.button(f"Deblocheaza {user}", key=f"unblock_{user}"):
-                    unblock_user(user)
-                    st.success(f"{user} deblocat!")
-                    st.rerun()
-        else:
-            st.success("Niciun utilizator blocat")
