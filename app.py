@@ -116,9 +116,13 @@ if st.session_state.current_module == 'Home':
             else: st.error("⛔ Interzis. Doar Manager.")
 
     with col8:
-        st.markdown('<div class="tile"><h3>🛡️ Vault Clienți</h3><p>Setări, Baze Date, Backup</p></div>', unsafe_allow_html=True)
-        if st.button("Acces", use_container_width=True")    
-        ile = 'Vault'; st.rerun()f st.session_state.role == "manager": st.session_state.current_modu
+        st.markdown('<div class="tile"><h3>🛡️ Vault</h3><p>Setări, Baze Date, Backup</p></div>', unsafe_allow_html=True)
+        if st.button("Acces", use_container_width=True):
+            if st.session_state.role == "manager": 
+                st.session_state.current_module = 'vault'
+                st.rerun()
+            else: 
+                st.error("⛔ Doar Manager")
 
     
 
