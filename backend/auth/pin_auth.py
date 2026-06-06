@@ -65,8 +65,8 @@ def verify_2fa(username):
         block_until = st.session_state[f"blocked_until_{username}"]
         minutes_left = int((block_until - datetime.now()).total_seconds() / 60) + 1
         st.error(f"❌ Cont blocat temporar. Incercati din nou peste {minutes_left} minute.")
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
+        c1, c2, c3 = st.columns([1, 2, 1])
+        with c2:
             if st.button("◀️ Înapoi la autentificare", use_container_width=True):
                 st.session_state.awaiting_2fa = False
                 st.session_state.pending_2fa_user = None
@@ -74,8 +74,8 @@ def verify_2fa(username):
         return False
     
     # Container centrat pentru 2FA
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
+    c1, c2, c3 = st.columns([1, 2, 1])
+    with c2:
         st.markdown("---")
         st.markdown("<h3 style='text-align: center;'>🔐 Verificare cod securitate</h3>", unsafe_allow_html=True)
         st.markdown(f"<p style='text-align: center; color: #666;'>Utilizator: <b>{username}</b></p>", unsafe_allow_html=True)
@@ -83,7 +83,7 @@ def verify_2fa(username):
         # Afișează câte încercări au rămas
         attempts_used = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
         remaining = MAX_ATTEMPTS - attempts_used
-        if remaining > 0 and remaining < MAX_ATTEMPTS:
+        if 0 < remaining < MAX_ATTEMPTS:
             st.warning(f"⚠️ Mai ai {remaining} încercări rămase.")
         
         with st.form(key=f"2fa_form_{username}"):
@@ -99,7 +99,7 @@ def verify_2fa(username):
                     st.rerun()
                 if verify_pin(username, pin_input):
                     st.session_state[f"{LOGIN_ATTEMPTS_KEY}_{username}"] = 0
-                    st.success("✅ Cod corect! Redirecționare...")
+                    st.success("✅ Cod corect!")
                     return True
                 else:
                     was_blocked = register_failed_attempt(username)
@@ -110,7 +110,7 @@ def verify_2fa(username):
                         st.error(f"❌ Cod incorect! Mai ai {remaining_after} încercări.")
                     return False
         
-        # BUTON ÎNAPOI - după formular
+        # BUTON ÎNAPOI - mereu vizibil după formular
         st.markdown("---")
         if st.button("◀️ Înapoi la autentificare", use_container_width=True):
             st.session_state.awaiting_2fa = False
