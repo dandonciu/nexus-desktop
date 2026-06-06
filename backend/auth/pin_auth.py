@@ -118,7 +118,7 @@ def verify_2fa(username):
         attempts_used = st.session_state.get(f"{LOGIN_ATTEMPTS_KEY}_{username}", 0)
         if attempts_used > 0:
             st.markdown(f"""
-            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; border-radius: 5px;">
+            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; border-radius: 5px; text-align: center;">
                 ⚠️ <b>Atenție!</b> Ai deja <b>{attempts_used}</b> încercări eșuate.<br>
                 Mai ai <b>{MAX_ATTEMPTS - attempts_used}</b> încercări înainte de blocare.
             </div>
