@@ -125,7 +125,7 @@ def verify_2fa(username):
         if attempts_used > 0:
             st.markdown(f"""
             <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; border-radius: 5px; text-align: center;">
-                ⚠️ <b>Atenție!</b> Ai deja <b>{attempts_used}</b> încercări eșuate.<br>
+                ⚠️ <b>Atenție!</b> Ai deja <b>{attempts_used}</b> încercare eșuată.<br>
                 Mai ai <b>{MAX_ATTEMPTS - attempts_used}</b> încercări înainte de blocare.
             </div>
             """, unsafe_allow_html=True)
