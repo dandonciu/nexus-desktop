@@ -138,7 +138,6 @@ def render_lansare_module():
                 prod_name = aliasuri_client_curent[selected_option]; alias_folosit = selected_option
                 st.info(f"🔄 Alias recunoscut: **{selected_option}** = **{prod_name}**")
             else: prod_name = selected_option; alias_folosit = None
-
             p_data = st.session_state.db[prod_name]
             av_pal, av_box = get_available_stock_ui(prod_name)
             
