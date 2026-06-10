@@ -172,7 +172,6 @@ def render_lansare_module():
             col_q1, col_q2, _ = st.columns([1, 1, 2])
             with col_q1: order_pal = st.number_input("Nr. PALEȚI:", min_value=0, step=1, key=f'input_pal_{st.session_state.reset_counter}')
             with col_q2: order_box = st.number_input("Nr. CUTII (fracție):", min_value=0, step=1, key=f'input_box_{st.session_state.reset_counter}')
-            
             if st.button("➕ Adaugă în Listă"):
                 st.session_state.last_success_msg = None 
                 if order_pal == 0 and order_box == 0: st.warning("Introduceți o cantitate.")
