@@ -89,7 +89,7 @@ div[data-testid="stButton"] button { border-radius: 8px; font-weight: bold; }
 """, unsafe_allow_html=True)
 
 c_logo, c_user, c_out = st.columns([8, 2, 1])
-with c_logo: st.markdown("### 🌌 NEXUS Core Orchestrator")
+with c_logo: st.markdown("### 🌌 NEXUS  Orchestrator")
 with c_user: st.markdown(f"<div style='text-align:right; padding-top:10px; color:grey;'>Logat ca: <b>{st.session_state.role.upper()}</b></div>", unsafe_allow_html=True)
 with c_out:
     if st.button("🚪 Logout"): st.session_state.logged_in = False; st.rerun()
