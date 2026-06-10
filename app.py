@@ -79,20 +79,32 @@ if not st.session_state.logged_in:
 # Aici vine dashboard-ul tău, modulele, etc.
 
 st.markdown("""
-<style>
-.tile { background-color: #1E1E2E; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #3b3b54; transition: transform 0.2s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.3); margin-bottom: 15px; color: white; height: 130px; display: flex; flex-direction: column; justify-content: center;}
-.tile:hover { transform: translateY(-5px); border-color: #00ADB5; }
-.tile h3 { color: #00ADB5; margin-bottom: 5px; font-size: 1.2rem; }
-.tile p { font-size: 13px; color: #A6ACCD; margin: 0; }
-div[data-testid="stButton"] button { border-radius: 8px; font-weight: bold; }
-</style>
+    <style>
+    .tile { background-color: #1E1E2E; padding: 15px; border-radius: 8px; text-align: center; border: 1px solid #3b3b54; transition: transform 0.2s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.3); margin-bottom: 15px; color: white; height: 130px; display: flex; flex-direction: column; justify-content: center;}
+    .tile:hover { transform: translateY(-5px); border-color: #00ADB5; }
+    .tile h3 { color: #00ADB5; margin-bottom: 5px; font-size: 1.2rem; }
+    .tile p { font-size: 13px; color: #A6ACCD; margin: 0; }
+    div[data-testid="stButton"] button { border-radius: 8px; font-weight: bold; }
+    </style>
 """, unsafe_allow_html=True)
 
 c_logo, c_user, c_out = st.columns([8, 2, 1])
-with c_logo: st.markdown("### 🌌 NEXUS  Orchestrator")
-with c_user: st.markdown(f"<div style='text-align:right; padding-top:10px; color:grey;'>Logat ca: <b>{st.session_state.role.upper()}</b></div>", unsafe_allow_html=True)
+
+with c_logo: 
+    st.markdown("""
+        <div style="padding: 5px 15px; border: 1px solid rgba(128, 128, 128, 0.3); border-radius: 6px; display: inline-block;">
+            <h3 style="margin: 0; padding: 0;">🌌 NEXUS Orchestrator</h3>
+            <p style="margin: 0; color: gray; font-size: 0.85rem; font-weight: normal;">Sistem Unic de Gestiune, Reconciliere și Automatizare</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with c_user: 
+    st.markdown(f"<div style='text-align:right; padding-top:15px; color:grey;'>Logat ca: <b>{st.session_state.role.upper()}</b></div>", unsafe_allow_html=True)
+
 with c_out:
+    st.markdown("<div style='margin-top: 10px;'></div>", unsafe_allow_html=True)
     if st.button("🚪 Logout"): st.session_state.logged_in = False; st.rerun()
+
 st.divider()
 
 # =================================================
