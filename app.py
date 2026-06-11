@@ -143,7 +143,7 @@ if st.session_state.current_module == 'Home':
     # Linia 2
     col5, col6, col7, col8 = st.columns(4)
     with col5:
-        st.markdown('<div class="tile"><h3>📨 Inbox</h3><p>Email B2B, Auto-Reply, Preluare comenzi/documente</p></div>', unsafe_allow_html=True)
+        st.markdown('<div class="tile"><h3>📨 Inbox</h3><p>Email B2B, Auto-Reply, Comenzi/Documente</p></div>', unsafe_allow_html=True)
         if st.button("Verifică Inbox", use_container_width=True, key="btn_inbox"):
             st.session_state.current_module = 'Email'
             st.rerun()
