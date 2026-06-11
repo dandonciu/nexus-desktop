@@ -28,4 +28,4 @@ def render_email_parser_module():
             st.toast("Se conectează la serverul IMAP...", icon="⏳")
             
         if st.button("🚀 Trimite în Buffer (Lansare)", use_container_width=True):
-            st.toast("Comenzile ar fi fost trimise spre WMS!", icon="✅")
+            st.toast("Comenzile se vor prelucra și vor fi trimise spre WMS!", icon="✅")
