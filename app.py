@@ -48,14 +48,14 @@ if not st.session_state.logged_in:
             submitted = st.form_submit_button("Autentificare", use_container_width=True)
             
             if submitted:
-                # Normalizare parolă (acceptă "angajat", "angajat-no", "angajatxxx")
+                # Normalizare parolă (acceptă "angajat", "angajatyyy", "angajatxxx")
                 if "angajat" in pwd:
-                    role = "angajat"
+                    role = "angajat-no"
                     st.session_state.awaiting_2fa = True
                     st.session_state.pending_2fa_user = role
                     st.session_state.pending_2fa_role = role
                     st.rerun()
-                elif "manager" in pwd:
+                elif "manager-no" in pwd:
                     role = "manager"
                     st.session_state.awaiting_2fa = True
                     st.session_state.pending_2fa_user = role
