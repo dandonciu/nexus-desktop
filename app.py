@@ -50,12 +50,12 @@ if not st.session_state.logged_in:
             if submitted:
                 # Normalizare parolă (acceptă "angajat", "angajatyyy", "angajatxxx")
                 if "angajat" in pwd:
-                    role = "angajat-no"
+                    role = "angajat"
                     st.session_state.awaiting_2fa = True
                     st.session_state.pending_2fa_user = role
                     st.session_state.pending_2fa_role = role
                     st.rerun()
-                elif "manager-no" in pwd:
+                elif "manager" in pwd:
                     role = "manager"
                     st.session_state.awaiting_2fa = True
                     st.session_state.pending_2fa_user = role
