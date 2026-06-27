@@ -3,17 +3,9 @@ import streamlit as st
 # ============================================================
 # VAULT SECURIZAT - Pagina Modul in Lucru
 # ============================================================
-# Fisier: pages/vault_module.py sau direct in app.py
 
-# --- CSS Custom pentru carduri si badge ---
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-body {
-    font-family: 'Inter', sans-serif;
-}
-
 /* Badge IN LUCRU */
 .badge-in-lucru {
     display: inline-block;
@@ -119,23 +111,6 @@ body {
     transition: width 0.3s;
 }
 
-/* Buton CTA */
-.cta-button {
-    background: #1e293b;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.cta-button:hover {
-    background: #334155;
-}
-
 /* Hero section */
 .hero-title {
     font-size: 28px;
@@ -182,11 +157,11 @@ body {
 st.markdown("""
 <div class="card-module">
     <div class="hero-title">
-        🔒 Vault Securizat
-        <span class="badge-in-lucru">ÎN LUCRU</span>
+        <span style="font-size:32px;">&#128274;</span> Vault Securizat
+        <span class="badge-in-lucru">IN LUCRU</span>
     </div>
     <div class="hero-subtitle">
-        Arhivă completă, securizată — gata de audit Big4
+        Arhiva completa, securizata — gata de audit Big4
     </div>
     <div class="progress-container">
         <div class="progress-label">Progres implementare: 40%</div>
@@ -198,51 +173,51 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ============================================================
-# CARDURI CAPABILITĂȚI
+# CARDURI CAPABILITATI
 # ============================================================
 capabilities = [
     {
-        "icon": "📁",
-        "title": "Clienți + Documente",
+        "icon": "&#128451;",
+        "title": "Clienti + Documente",
         "bullets": [
-            "Stochează toate documentele procesate (facturi, comenzi, avize)",
-            "Structură pe clienți și proiecte, acces instant",
-            "Versiuni și istoric complet pentru fiecare document",
-            "Căutare full-text în conținutul documentelor"
+            "Stocheaza toate documentele procesate (facturi, comenzi, avize)",
+            "Structura pe clienti si proiecte, acces instant",
+            "Versiuni si istoric complet pentru fiecare document",
+            "Cautare full-text in continutul documentelor"
         ]
     },
     {
-        "icon": "💾",
+        "icon": "&#128190;",
         "title": "Backup Dual Automat",
         "bullets": [
             "Backup automat dual: cloud + HDD fizic",
-            "Alertă la apropiere de limită stocare",
-            "Verificare automată a integrității backup-urilor",
-            "Restaurare rapidă la orice moment"
+            "Alerta la apropiere de limita stocare",
+            "Verificare automata a integritatii backup-urilor",
+            "Restaurare rapida la orice moment"
         ]
     },
     {
-        "icon": "📜",
-        "title": "Retenție Legală",
+        "icon": "&#128220;",
+        "title": "Retentie Legala",
         "bullets": [
-            "Păstrează istoric clienți și documente 5 ani (conform legii)",
-            "Situații financiare anuale: retenție 10 ani",
-            "Dosare de personal: retenție 50 ani",
+            "Pastreaza istoric clienti si documente 5 ani (conform legii)",
+            "Situatii financiare anuale: retentie 10 ani",
+            "Dosare de personal: retentie 50 ani",
             "Format digital acceptat legal (PDF/A)"
         ]
     },
     {
-        "icon": "🛡️",
-        "title": "Securitate Deplină",
+        "icon": "&#128737;",
+        "title": "Securitate Deplina",
         "bullets": [
-            "Zero ransomware — izolare completă",
+            "Zero ransomware — izolare completa",
             "Criptare AES-256 end-to-end",
-            "Acces bazat pe roluri și audit trail",
-            "Conformitate GDPR și ISO 27001"
+            "Acces bazat pe roluri si audit trail",
+            "Conformitate GDPR si ISO 27001"
         ]
     },
     {
-        "icon": "🔍",
+        "icon": "&#128269;",
         "title": "Audit Big4 Ready",
         "bullets": [
             "Export structurat pentru audit extern",
@@ -253,7 +228,7 @@ capabilities = [
     }
 ]
 
-# Render carduri in grid 3 coloane (ultimul rand va avea 2 carduri)
+# Render carduri in grid 3 coloane
 for row_start in range(0, len(capabilities), 3):
     cols = st.columns(3)
     for i in range(3):
@@ -277,8 +252,8 @@ for row_start in range(0, len(capabilities), 3):
 # ============================================================
 st.markdown("""
 <div class="highlight-box">
-    <p><strong>🛡️ Securitate deplină</strong> — zero ransomware, acces controlat, backup-uri verificate automat.</p>
-    <p style="margin-top: 8px;"><strong>📊 Big 4 ready</strong> — export structurat pentru audit, PDF-uri originale + hash de verificare.</p>
+    <p><strong>&#128737; Securitate deplina</strong> — zero ransomware, acces controlat, backup-uri verificate automat.</p>
+    <p style="margin-top: 8px;"><strong>&#128202; Big 4 ready</strong> — export structurat pentru audit, PDF-uri originale + hash de verificare.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -288,5 +263,5 @@ st.markdown("""
 st.markdown("<br>", unsafe_allow_html=True)
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    if st.button("🔔 Anunță-mă când e gata", use_container_width=True, type="primary"):
-        st.success("✅ Vei fi notificat când modulul Vault Securizat devine disponibil!")
+    if st.button("&#128276; Anunta-ma cand e gata", use_container_width=True, type="primary"):
+        st.success("Vei fi notificat cand modulul Vault Securizat devine disponibil!")
